@@ -1,5 +1,6 @@
 #pythran export LTInversion(float64, float64, float64, float64, float64, float64)
 
+from numba import jit
 import numpy as np
 
 def LTInversion(t,lamda,alpha,beta,gama,log_epsilon):
@@ -93,6 +94,7 @@ def LTInversion(t,lamda,alpha,beta,gama,log_epsilon):
 # =========================================================================
 # Finding optimal parameters in a right-bounded region
 # =========================================================================
+@jit(nopython=True)
 def OptimalParam_RB(t, phi_s_star_j, phi_s_star_j1, pj, qj, log_epsilon):
     # Definition of some constants
     log_eps = -36.043653389117154 # log(eps)
@@ -181,6 +183,7 @@ def OptimalParam_RB(t, phi_s_star_j, phi_s_star_j1, pj, qj, log_epsilon):
 # =========================================================================
 # Finding optimal parameters in a right-unbounded region
 # =========================================================================
+@jit(nopython=True)
 def OptimalParam_RU(t, phi_s_star_j, pj, log_epsilon):
     # Evaluation of the starting values for sq_phi_star_j
     sq_phi_s_star_j = np.sqrt(phi_s_star_j)
@@ -209,7 +212,7 @@ def OptimalParam_RU(t, phi_s_star_j, pj, log_epsilon):
         phibar_star_j = sq_phibar_star_j**2
     muj = sq_muj**2
     hj = (-3*A - 2 + 2*np.sqrt(1+12*A))/(4-A)/Nj
-    
+
     # Adjusting integration parameters to keep round-off errors under control
     log_eps = np.log(np.finfo(np.float64).eps)
     threshold = (log_epsilon - log_eps)/t
