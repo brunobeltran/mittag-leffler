@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.special import gamma
-from ml_internal import LTInversion
+from .ml_internal import LTInversion
 
 def ml(z, alpha, beta=1., gama=1.):
     eps = np.finfo(np.float64).eps
@@ -16,7 +16,7 @@ def ml(z, alpha, beta=1., gama=1.):
     return np.vectorize(ml_, [np.float64])(z, alpha, beta, gama)
 
 def ml_(z, alpha, beta, gama):
-    # Target precision 
+    # Target precision
     log_epsilon = np.log(1.e-15)
     # Inversion of the LT
     if np.abs(z) < 1.e-15:
